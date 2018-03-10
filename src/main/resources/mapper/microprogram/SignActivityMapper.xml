@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+		PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mpserver.mapper.microprogram.SignActivityMapper">
+	<resultMap id="BaseResultMap" type="mpserver.entity.microprogram.SignActivityEntity">
+		<id column="id" property="id" jdbcType="BIGINT" />
+		<id column="creator" property="creator" jdbcType="VARCHAR" />
+		<id column="modifier" property="modifier" jdbcType="VARCHAR" />
+		<id column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+		<id column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+		
+		<result column="open_id" property="openId" jdbcType="VARCHAR" />
+		<result column="activity_name" property="activityName" jdbcType="VARCHAR" />
+		<result column="remark" property="remark" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<sql id="Base_Column_List_withoutid">
+		creator,modifier,gmt_create,gmt_modified,open_id,activity_name,remark
+	</sql>
+	<sql id="Base_Column_List">
+		id,
+		<include refid="Base_Column_List_withoutid" />
+	</sql>
+
+	<select id="findById" parameterType="java.lang.Long" resultMap="BaseResultMap">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM sign_activity
+		WHERE id = #{id}
+	</select>
+
+	<insert id="insert" parameterType="mpserver.entity.microprogram.SignActivityEntity">
+		INSERT INTO
+		sign_activity
+		(
+		<include refid="Base_Column_List_withoutid" />
+		)
+		VALUES
+		(#{creator}, #{modifier}, #{gmtCreate}, #{gmtModified}, #{openId}, #{activityName}, #{remark})
+	</insert>
+
+	<update id="update" parameterType="mpserver.entity.microprogram.SignActivityEntity">
+		UPDATE
+		sign_activity
+		<trim prefix="set" suffixOverrides=",">
+			gmt_modified = #{gmtModified},
+			modifier=#{modifier},
+			<if test="activityName != null">activity_name = #{activityName},</if>
+			<if test="remark != null">remark = #{remark},</if>
+		</trim>
+		WHERE
+		id = #{id}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Long">
+		DELETE FROM
+		sign_activity
+		WHERE
+		id =#{id}
+	</delete>
+</mapper>
